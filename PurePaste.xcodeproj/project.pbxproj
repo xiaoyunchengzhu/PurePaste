@@ -15,11 +15,11 @@
 		AABBCC0000000000000000A5 /* ActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000016 /* ActionExecutor.swift */; };
 		AABBCC0000000000000000A6 /* FloatingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000017 /* FloatingPanelView.swift */; };
 		AABBCC0000000000000000A7 /* FloatingPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000018 /* FloatingPanelController.swift */; };
-		AABBCC0000000000000000AC /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001D /* Localization.swift */; };
 		AABBCC0000000000000000A8 /* HistoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000019 /* HistoryEntry.swift */; };
 		AABBCC0000000000000000A9 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001A /* HistoryStore.swift */; };
 		AABBCC0000000000000000AA /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001B /* HistoryView.swift */; };
 		AABBCC0000000000000000AB /* HistoryWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001C /* HistoryWindowController.swift */; };
+		AABBCC0000000000000000AC /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001D /* Localization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,11 +32,11 @@
 		AABBCC000000000000000016 /* ActionExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionExecutor.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000017 /* FloatingPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelView.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000018 /* FloatingPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelController.swift; sourceTree = "<group>"; };
-		AABBCC00000000000000001D /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000019 /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 		AABBCC00000000000000001A /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
 		AABBCC00000000000000001B /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		AABBCC00000000000000001C /* HistoryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryWindowController.swift; sourceTree = "<group>"; };
+		AABBCC00000000000000001D /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000020 /* PurePaste.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PurePaste.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,11 +70,11 @@
 				AABBCC000000000000000016 /* ActionExecutor.swift */,
 				AABBCC000000000000000017 /* FloatingPanelView.swift */,
 				AABBCC000000000000000018 /* FloatingPanelController.swift */,
-					AABBCC00000000000000001D /* Localization.swift */,
-					AABBCC000000000000000019 /* HistoryEntry.swift */,
-					AABBCC00000000000000001A /* HistoryStore.swift */,
-					AABBCC00000000000000001B /* HistoryView.swift */,
-					AABBCC00000000000000001C /* HistoryWindowController.swift */,
+				AABBCC00000000000000001D /* Localization.swift */,
+				AABBCC000000000000000019 /* HistoryEntry.swift */,
+				AABBCC00000000000000001A /* HistoryStore.swift */,
+				AABBCC00000000000000001B /* HistoryView.swift */,
+				AABBCC00000000000000001C /* HistoryWindowController.swift */,
 				AABBCC000000000000000014 /* Info.plist */,
 			);
 			path = PurePaste;
@@ -301,7 +301,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LK42D3X85Q;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PurePaste/Info.plist;
@@ -326,7 +326,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LK42D3X85Q;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PurePaste/Info.plist;
