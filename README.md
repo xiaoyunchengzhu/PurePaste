@@ -34,8 +34,8 @@ When you copy something, PasteFlow detects what it is and offers relevant action
 
 | Type | Example | Actions |
 |------|---------|---------|
-| URL | `https://github.com` | Open in Browser |
-| Email | `hello@example.com` | Compose Mail |
+| URL | `https://www.xiaoniubuniu.com` | Open in Browser |
+| Email | `xiaoyunchengzhu@gmail.com` | Compose Mail |
 | Phone | `13812345678` | Call |
 | Address | `北京市海淀区...` | Open in Maps |
 | IP | `192.168.1.1` | Ping |

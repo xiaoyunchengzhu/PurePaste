@@ -34,8 +34,8 @@ PurePaste 是一个 macOS 菜单栏应用，常驻右上角，监听剪贴板变
 
 | 类型 | 示例 | 操作 |
 |------|------|------|
-| 链接 | `https://github.com` | 浏览器打开 |
-| 邮箱 | `hello@example.com` | 写邮件 |
+| 链接 | `https://www.xiaoniubuniu.com` | 浏览器打开 |
+| 邮箱 | `xiaoyunchengzhu@gmail.com` | 写邮件 |
 | 电话 | `13812345678` | 拨打电话 |
 | 地址 | `北京市海淀区中关村南大街5号` | 地图查看 |
 | IP | `192.168.1.1` | Ping |
