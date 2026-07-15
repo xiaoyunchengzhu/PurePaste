@@ -12,7 +12,7 @@
 <p align="center"><b>macOS Smart Clipboard Assistant</b> — understands what you copy, not just what it says.</p>
 
 <p align="center">
-  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><b>🔗 产品落地页 / Product Page & Download 🔗</b></a>
+  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><b>🔗   Product Page & Download 🔗</b></a>
 </p>
 
 <p align="center">
