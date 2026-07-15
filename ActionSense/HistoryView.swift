@@ -40,7 +40,7 @@ struct HistoryView: View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
-            TextField(L10n.historySearchPlaceholder, text: $store.searchText)
+            TextField(String(localized: "history.search"), text: $store.searchText)
                 .textFieldStyle(.plain)
                 .font(.system(size: 14))
                 .focused($isSearchFocused)
@@ -81,7 +81,7 @@ struct HistoryView: View {
             store.filterMode = mode
             store.filterByType = nil
         }) {
-            Text(mode.rawValue)
+            Text(mode.localizedName)
                 .font(.system(size: 11, weight: isActive ? .semibold : .regular))
                 .foregroundColor(isActive ? .white : .primary)
                 .padding(.horizontal, 10)
@@ -124,7 +124,7 @@ struct HistoryView: View {
                     Image(systemName: store.searchText.isEmpty ? "tray" : "magnifyingglass")
                         .font(.system(size: 28))
                         .foregroundColor(.secondary.opacity(0.5))
-                    Text(store.searchText.isEmpty ? L10n.historyNoRecords : L10n.historyNoMatch)
+                    Text(store.searchText.isEmpty ? String(localized: "history.empty") : String(localized: "history.noMatch"))
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
                 }
@@ -138,10 +138,10 @@ struct HistoryView: View {
                             hoveredEntryID = hovering ? entry.id : nil
                         }
                         .contextMenu {
-                            Button(L10n.historyCopyText) {
+                            Button(String(localized: "history.copyText")) {
                                 copyToClipboard(entry.text)
                             }
-                            Button(L10n.historyDeleteEntry) {
+                            Button(String(localized: "history.deleteEntry")) {
                                 store.deleteEntry(entry)
                             }
                         }
@@ -181,7 +181,7 @@ struct HistoryView: View {
                     }
 
                     if !entry.isIntentFulfilled && entry.detectedType != nil {
-                        badge(L10n.historyNotActed, color: .orange)
+                        badge(String(localized: "history.notActed"), color: .orange)
                     }
 
                     Text(entry.mode)
@@ -211,7 +211,7 @@ struct HistoryView: View {
             Button(action: {
                 store.clearAll()
             }) {
-                Text(L10n.historyClearAll)
+                Text(String(localized: "history.clearAll"))
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
@@ -219,7 +219,7 @@ struct HistoryView: View {
 
             Spacer()
 
-            Text("\(store.filteredEntries.count) / \(store.entries.count)" + (L10n.isChinese ? " 条" : " entries"))
+            Text("\(store.filteredEntries.count) / \(store.entries.count)" + ( " " + String(localized: "history.entries")))
                 .font(.system(size: 10))
                 .foregroundColor(.secondary.opacity(0.6))
         }

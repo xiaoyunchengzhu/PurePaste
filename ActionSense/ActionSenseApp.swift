@@ -11,23 +11,40 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 明显的启动标记，方便在控制台噪音中找到
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        print("  ✅ PurePaste 已启动")
+        // 注册所有 PasteFlow 内容检测器（优先级链）
+        let registry = DetectorRegistry.shared
+        registry.register(ColorDetector())        // 0
+        registry.register(IPDetector())           // 1
+        registry.register(EmailDetector())        // 2
+        registry.register(URLDetector())          // 3
+        registry.register(ImageURLDetector())     // 4
+        registry.register(PhoneDetector())        // 5
+        registry.register(JSONDetector())         // 6
+        registry.register(TrackingDetector())     // 7
+        registry.register(MathDetector())         // 9
+        registry.register(GeoDetector())          // 10
+        registry.register(DatetimeDetector())     // 11
+        registry.register(AddressDetector())      // 12
+        registry.register(RichHTMLDetector())     // 13
+        registry.lock()
+
+        print("  ✅ ActionSense 已启动")
         print("  📋 查看屏幕右上角菜单栏的剪贴板图标")
-        print("  \(L10n.startupMessage)")
+        print("  \(String(localized: "startup.message"))")
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     }
 }
 
-// MARK: - PurePaste 应用入口
+// MARK: - ActionSense 应用入口
 // 使用 MenuBarExtra 构建原生菜单栏应用，无 Dock 图标，无主窗口
 
 @main
-struct PurePasteApp: App {
+struct ActionSenseApp: App {
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     /// 全局 ViewModel，管理剪贴板监听和状态
-    @StateObject private var viewModel = PurePasteViewModel()
+    @StateObject private var viewModel = ActionSenseViewModel()
 
     var body: some Scene {
         MenuBarExtra {

@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - 菜单栏弹出菜单视图
 
 struct MenuView: View {
-    @EnvironmentObject var viewModel: PurePasteViewModel
+    @EnvironmentObject var viewModel: ActionSenseViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -27,11 +27,9 @@ struct MenuView: View {
 
             Divider()
 
-            // ---- 试用 / 购买 ----
-            if !viewModel.isActivated {
-                trialSection
-                Divider()
-            }
+            // ---- Pro / 升级 ----
+            Divider()
+            proSection
 
             // ---- 历史记录 ----
             Divider()
@@ -74,7 +72,7 @@ struct MenuView: View {
 
     private var modeSelectionSection: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(L10n.Menu.modeSelection.text)
+            Text(L10n.Menu.text(for: "modeSelection"))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 12)
@@ -111,7 +109,7 @@ struct MenuView: View {
                     .foregroundColor(isDisabled ? .secondary.opacity(0.35) : accentColor(for: mode))
 
                 // 模式名称
-                Text(L10n.Mode(rawValue: mode.rawValue)!.text)
+                Text(mode.displayName)
                     .font(.body)
 
                 Spacer()
@@ -137,7 +135,7 @@ struct MenuView: View {
     @ViewBuilder
     private var conversionPreviewSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(L10n.Menu.recentConversion.text)
+            Text(L10n.Menu.text(for: "recentConversion"))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 12)
@@ -159,7 +157,7 @@ struct MenuView: View {
                     Image(systemName: "clock")
                         .font(.system(size: 12))
                         .foregroundColor(.secondary)
-                    Text(L10n.Menu.waitingFirstCopy.text)
+                    Text(L10n.Menu.text(for: "waitingFirstCopy"))
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
                 }
@@ -171,7 +169,7 @@ struct MenuView: View {
                     Image(systemName: "info.circle")
                         .font(.system(size: 12))
                         .foregroundColor(.orange)
-                    Text(L10n.Menu.lastCopyNonText.text)
+                    Text(L10n.Menu.text(for: "lastCopyNonText"))
                         .font(.system(size: 10))
                         .foregroundColor(.secondary)
                 }
@@ -185,7 +183,7 @@ struct MenuView: View {
 
     private var preferencesSection: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(L10n.Menu.preferences.text)
+            Text(L10n.Menu.text(for: "preferences"))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding(.horizontal, 12)
@@ -194,7 +192,7 @@ struct MenuView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "power")
                         .frame(width: 18)
-                    Text(L10n.Menu.launchAtLogin.text)
+                    Text(L10n.Menu.text(for: "launchAtLogin"))
                 }
             }
             .toggleStyle(.checkbox)
@@ -207,77 +205,121 @@ struct MenuView: View {
 
     // MARK: - 语言选择
 
-    @AppStorage("preferredLanguage") private var preferredLanguage: String = L10n.Language.auto.rawValue
+    @StateObject private var langManager = LanguageManager.shared
+    @State private var showRestartAlert = false
 
     private var languagePicker: some View {
-        Picker(selection: $preferredLanguage) {
-            ForEach(L10n.Language.allCases, id: \.rawValue) { lang in
+        Picker(selection: Binding(
+            get: { langManager.preferredLanguage.rawValue },
+            set: { newValue in
+                let newLang = LanguageManager.Language(rawValue: newValue) ?? .auto
+                if newLang != langManager.preferredLanguage {
+                    langManager.preferredLanguage = newLang
+                    showRestartAlert = true
+                }
+            }
+        )) {
+            ForEach(LanguageManager.Language.allCases, id: \.rawValue) { lang in
                 Text(lang.displayName).tag(lang.rawValue)
             }
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "globe")
                     .frame(width: 18)
-                Text(L10n.isChinese ? "语言" : "Language")
+                Text(String(localized: "menu.language"))
             }
         }
         .pickerStyle(.menu)
         .padding(.horizontal, 12)
         .padding(.vertical, 2)
+        .alert(String(localized: "language.restartTitle"), isPresented: $showRestartAlert) {
+            Button(String(localized: "language.restartNow"), role: .destructive) {
+                langManager.restart()
+            }
+            Button(String(localized: "language.restartLater"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "language.restartMsg"))
+        }
     }
 
-    // MARK: - 试用 / 购买区域
+    // MARK: - Pro / 升级区域
 
-    private var trialSection: some View {
+    private var proSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if viewModel.isTrialExpired {
-                // 试用已过期
+            if viewModel.storeManager.isPro {
+                // Pro 已激活
                 HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.orange)
+                    Image(systemName: "checkmark.seal.fill")
+                        .foregroundColor(.teal)
                         .font(.system(size: 11))
-                    Text(L10n.Menu.trialExpired.text)
+                    Text(String(localized: "pro.title"))
                         .font(.system(size: 11))
-                        .foregroundColor(.orange)
+                        .foregroundColor(.teal)
                 }
                 .padding(.horizontal, 12)
             } else {
-                // 试用期内
+                // 免费版：显示剩余次数
                 HStack {
                     Image(systemName: "gift.fill")
                         .foregroundColor(.blue)
                         .font(.system(size: 11))
-                    Text(L10n.isChinese ? "试用中（剩余约 \(max(0, 7 - viewModel.launchCount)) 天）" : "Trial (\(max(0, 7 - viewModel.launchCount)) days left)")
+                    Text(L10n.isChinese
+                        ? "今日剩余 \(viewModel.remainingDailyCount) 次 PasteFlow"
+                        : "\(viewModel.remainingDailyCount) PasteFlow remaining today")
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 12)
-            }
 
-            // 购买按钮
-            Button(action: { viewModel.openBuyPage() }) {
-                HStack(spacing: 6) {
-                    Image(systemName: "cart.fill")
-                        .frame(width: 18)
-                    Text(L10n.Menu.buyActivate.text)
-                    Spacer()
-                    Text("$9.99")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                // 购买按钮
+                Button(action: { viewModel.purchasePro() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "cart.fill")
+                            .frame(width: 18)
+                        Text(String(localized: "pro.upgrade"))
+                        Spacer()
+                        Text("$4.99")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .contentShape(Rectangle())
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 5)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+                .buttonStyle(.plain)
 
-            // 测试用：模拟激活切换
+                // 购买错误提示
+                if let error = viewModel.storeManager.purchaseError {
+                    Text(error)
+                        .font(.system(size: 10))
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 12)
+                }
+
+                // 恢复购买
+                Button(action: { viewModel.restorePurchase() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.clockwise")
+                            .frame(width: 18)
+                        Text(String(localized: "pro.restore"))
+                            .font(.system(size: 11))
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 3)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+
+            // Debug 切换
             #if DEBUG
-            Button(action: { viewModel.toggleActivation() }) {
+            Button(action: { viewModel.storeManager.isPro.toggle() }) {
                 HStack(spacing: 6) {
-                    Image(systemName: viewModel.isActivated ? "key.fill" : "key")
+                    Image(systemName: viewModel.storeManager.isPro ? "key.fill" : "key")
                         .frame(width: 18)
-                    Text(viewModel.isActivated ? L10n.Menu.cancelActivate.text : L10n.Menu.simulateActivate.text)
+                    Text(viewModel.storeManager.isPro
+                        ? (L10n.isChinese ? "取消 Pro (Debug)" : "Deactivate Pro (Debug)")
+                        : (L10n.isChinese ? "模拟 Pro (Debug)" : "Simulate Pro (Debug)"))
                         .font(.system(size: 11))
                 }
                 .padding(.horizontal, 12)
@@ -293,11 +335,11 @@ struct MenuView: View {
     // MARK: - 历史记录按钮
 
     private var historyButton: some View {
-        Button(action: { HistoryWindowController.shared.toggle() }) {
+        Button(action: { viewModel.toggleHistory() }) {
             HStack(spacing: 6) {
                 Image(systemName: "clock.arrow.circlepath")
                     .frame(width: 18)
-                Text(L10n.Menu.clipboardHistory.text)
+                Text(L10n.Menu.text(for: "clipboardHistory"))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 5)
@@ -313,7 +355,7 @@ struct MenuView: View {
             HStack(spacing: 6) {
                 Image(systemName: "questionmark.circle")
                     .frame(width: 18)
-                Text(L10n.Menu.help.text)
+                Text(L10n.Menu.text(for: "help"))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 5)
@@ -329,7 +371,7 @@ struct MenuView: View {
             HStack(spacing: 6) {
                 Image(systemName: "info.circle")
                     .frame(width: 18)
-                Text(L10n.Menu.about.text)
+                Text(L10n.Menu.text(for: "about"))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 5)
@@ -345,7 +387,7 @@ struct MenuView: View {
             HStack(spacing: 6) {
                 Image(systemName: "xmark.square")
                     .frame(width: 18)
-                Text(L10n.Menu.quit.text)
+                Text(L10n.Menu.text(for: "quit"))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 5)
@@ -380,11 +422,11 @@ struct MenuView: View {
     /// 显示"关于"对话框
     private func showAboutDialog() {
         let alert = NSAlert()
-        alert.messageText = "PurePaste"
-        alert.informativeText = "\(L10n.Menu.version.text)\n\n\(L10n.aboutText)"
+        alert.messageText = "ActionSense"
+        alert.informativeText = "\(L10n.Menu.text(for: "version"))\n\n\(L10n.aboutText)"
         alert.alertStyle = .informational
-        alert.addButton(withTitle: L10n.isChinese ? "确定" : "OK")
-        alert.icon = NSImage(systemSymbolName: "clipboard", accessibilityDescription: "PurePaste")
+        alert.addButton(withTitle: L10n.aboutOK)
+        alert.icon = NSImage(systemSymbolName: "clipboard", accessibilityDescription: "ActionSense")
         alert.runModal()
     }
 }
@@ -393,5 +435,5 @@ struct MenuView: View {
 
 #Preview {
     MenuView()
-        .environmentObject(PurePasteViewModel())
+        .environmentObject(ActionSenseViewModel())
 }

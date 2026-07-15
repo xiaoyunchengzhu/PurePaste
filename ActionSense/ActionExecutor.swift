@@ -33,6 +33,12 @@ enum ActionExecutor {
             convertToMarkdown(for: content)
         case .convertToPlainText:
             convertToPlainText(for: content)
+        case .formatJSON:
+            formatJSON(for: content)
+        case .minifyJSON:
+            minifyJSON(for: content)
+        case .openRepo:
+            openRepo(for: content)
         }
     }
 
@@ -95,9 +101,9 @@ enum ActionExecutor {
         formatter.dateFormat = L10n.isChinese ? "yyyy年M月d日 HH:mm" : "MMM d, yyyy HH:mm"
 
         let info = """
-        \(L10n.calendarEventTitle)
-        \(L10n.isChinese ? "时间" : "Time")：\(formatter.string(from: date))
-        \(L10n.isChinese ? "原始内容" : "Original")：\(original)
+        \(String(localized: "calendar.title"))
+        \(String(localized: "calendar.time"))：\(formatter.string(from: date))
+        \(String(localized: "calendar.original"))：\(original)
         """
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
@@ -114,15 +120,15 @@ enum ActionExecutor {
 
     private static func pingIP(for content: DetectedContent) {
         guard case .ipAddress(let ip) = content else { return }
-        // 打开终端并执行 ping
-        let script = """
-        tell application "Terminal"
-            activate
-            do script "ping -c 4 \(ip)"
-        end tell
-        """
-        if let appleScript = NSAppleScript(source: script) {
-            appleScript.executeAndReturnError(nil)
+        // 复制 ping 命令到剪贴板，打开终端（沙盒兼容）
+        let cmd = "ping -c 4 \(ip)"
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(cmd, forType: .string)
+
+        // 打开终端 App（用户 Cmd+V 即可执行）
+        if let terminalURL = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "terminal://")!) {
+            NSWorkspace.shared.open(terminalURL)
         }
     }
 
@@ -205,6 +211,52 @@ enum ActionExecutor {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(TextProcessor.plainText(text), forType: .string)
+    }
+
+    // MARK: - JSON 处理
+
+    private static func formatJSON(for content: DetectedContent) {
+        guard case .jsonContent(let json) = content,
+              let data = json.data(using: .utf8),
+              let obj = try? JSONSerialization.jsonObject(with: data),
+              let formatted = try? JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted),
+              let result = String(data: formatted, encoding: .utf8) else { return }
+        let pb = NSPasteboard.general
+        pb.clearContents()
+        pb.setString(result, forType: .string)
+    }
+
+    private static func minifyJSON(for content: DetectedContent) {
+        guard case .jsonContent(let json) = content,
+              let data = json.data(using: .utf8),
+              let obj = try? JSONSerialization.jsonObject(with: data),
+              let compact = try? JSONSerialization.data(withJSONObject: obj, options: []),
+              let result = String(data: compact, encoding: .utf8) else { return }
+        let pb = NSPasteboard.general
+        pb.clearContents()
+        pb.setString(result, forType: .string)
+    }
+
+    // MARK: - Git Repo
+
+    private static func openRepo(for content: DetectedContent) {
+        guard case .url(let url) = content else { return }
+        let urlStr = url.absoluteString
+        // 提取 owner/repo，去掉多余路径
+        if urlStr.contains("github.com") || urlStr.contains("gitlab.com") || urlStr.contains("bitbucket.org") {
+            // 拼接 repo 页面 URL
+            let parts = url.pathComponents.filter { $0 != "/" }
+            if parts.count >= 2 {
+                let repoPath = parts.prefix(3).joined(separator: "/")  // /owner/repo
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+                components?.path = repoPath
+                if let repoURL = components?.url {
+                    NSWorkspace.shared.open(repoURL)
+                    return
+                }
+            }
+        }
+        NSWorkspace.shared.open(url)
     }
 
 }

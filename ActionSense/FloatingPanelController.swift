@@ -12,12 +12,16 @@ final class FloatingPanelController {
     /// 当前显示的浮动窗口
     private var panel: NSWindow?
 
-    /// 监听外部点击/按键，用于自动关闭
+    /// 监听按键 + App 切换，用于自动关闭
     private var localEventMonitor: Any?
-    private var globalEventMonitor: Any?
+    private var appSwitchObserver: NSObjectProtocol?
+    private var dismissTimer: Timer?
 
-    /// KvRlYG2IXqgl：面板是否正在显示
+    /// 面板是否正在显示
     var isShowing: Bool { panel != nil }
+
+    /// 操作执行回调（由 ViewModel 注入，处理历史记录等副作用）
+    var onActionExecuted: ((PasteFlowAction) -> Void)?
 
     private init() {}
 
@@ -59,7 +63,7 @@ final class FloatingPanelController {
                 onAction: { [weak self] action in
                     self?.dismiss()
                     ActionExecutor.execute(action: action, content: content)
-                    HistoryStore.shared.markLastIntentFulfilled(action: action.displayName)
+                    self?.onActionExecuted?(action)
                 },
                 onDismiss: { [weak self] in
                     self?.dismiss()
@@ -98,17 +102,19 @@ final class FloatingPanelController {
             return event
         }
 
-        // 监听外部鼠标点击关闭（延迟添加避免立即触发）
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
-                guard let self = self, let panel = self.panel else { return }
-                // 检查点击是否在面板外部
-                let clickLocation = NSEvent.mouseLocation
-                let panelGlobalFrame = self.convertToScreen(panel.frame)
-                if !NSPointInRect(clickLocation, panelGlobalFrame) {
-                    self.dismiss()
-                }
-            }
+        // 5 秒无操作自动关闭
+        dismissTimer?.invalidate()
+        dismissTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            Task { @MainActor in self?.dismiss() }
+        }
+
+        // 用户切换 App 时关闭面板（替代全局鼠标监听，沙盒合规）
+        appSwitchObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didActivateApplicationNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in self?.dismiss() }
         }
 
         self.panel = window
@@ -139,10 +145,12 @@ final class FloatingPanelController {
             NSEvent.removeMonitor(monitor)
             localEventMonitor = nil
         }
-        if let monitor = globalEventMonitor {
-            NSEvent.removeMonitor(monitor)
-            globalEventMonitor = nil
+        if let observer = appSwitchObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(observer)
+            appSwitchObserver = nil
         }
+        dismissTimer?.invalidate()
+        dismissTimer = nil
     }
 
     /// 将窗口坐标转换为屏幕坐标（NSWindow frame 已在屏幕坐标系，直接返回）

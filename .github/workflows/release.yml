@@ -15,8 +15,8 @@ jobs:
 
       - name: Build Release
         run: |
-          xcodebuild -project PurePaste.xcodeproj \
-            -scheme PurePaste \
+          xcodebuild -project ActionSense.xcodeproj \
+            -scheme ActionSense \
             -configuration Release \
             -derivedDataPath ./build \
             CODE_SIGN_IDENTITY="-" \

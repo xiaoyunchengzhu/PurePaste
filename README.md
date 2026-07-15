@@ -2,24 +2,28 @@
   <img src="https://img.shields.io/badge/macOS-14.0%2B-blue" alt="macOS">
   <img src="https://img.shields.io/badge/Swift-5.0-orange" alt="Swift">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
-  <a href="https://www.xiaoniubuniu.com/products/pure-paste/"><img src="https://img.shields.io/badge/Download-xiaoniubuniu.com-ff69b4" alt="Download"></a>
+  <a href="https://www.xiaoniubuniu.com/products/actionsense/"><img src="https://img.shields.io/badge/Download-xiaoniubuniu.com-ff69b4" alt="Download"></a>
 </p>
 
 <p align="center"><b>English</b> | <a href="README_zh.md">中文</a></p>
 
-# PurePaste
+# ActionSense
 
 <p align="center"><b>macOS Smart Clipboard Assistant</b> — understands what you copy, not just what it says.</p>
 
 <p align="center">
-  <a href="https://www.xiaoniubuniu.com/products/pure-paste/">Product Page & Download</a>
+  <a href="https://www.xiaoniubuniu.com/products/actionsense/">Product Page & Download</a>
 </p>
 
 ---
 
-## What is PurePaste?
+## Why I Built This
 
-PurePaste is a macOS menu bar app that watches your clipboard and acts on what you copy. Two modes:
+I got tired of the same manual steps after every copy. Copy a URL → open a browser → paste → Enter. Copy a hex color → open a color picker just to see it. Copy a math expression → reach for Calculator. ActionSense automates that second step.
+
+## What is ActionSense?
+
+ActionSense is a macOS menu bar app that watches your clipboard and acts on what you copy. Two modes:
 
 - **Plain Text Mode** — automatically strips rich formatting, cleans up whitespace and CJK spacing
 - **PasteFlow Mode** — detects the *type* of content you copied (URL, email, color, math expression...) and pops up a floating action panel at your mouse cursor. One click or <kbd>Enter</kbd> to act.
@@ -44,6 +48,8 @@ When you copy something, PasteFlow detects what it is and offers relevant action
 | Math | `(35+47)*1.2` | Copy Result (custom recursive descent parser) |
 | Coordinates | `39.9042, 116.4074` | Open in Maps |
 | Tracking | `SF123456789012` | Track Package |
+| JSON | `{"key": "value"}` | Format / Minify |
+| Git URL | `github.com/user/repo` | Open in Browser + Open Repo |
 | Rich HTML | Web content with formatting | Convert to Markdown / Plain Text |
 
 - <kbd>Enter</kbd> triggers the action directly when there's only one button
@@ -60,11 +66,11 @@ Every clipboard change is recorded with metadata:
 - 🟠 Detected but not acted upon
 - ⚪ Plain text / unrecognized
 
-Filter by type, mode, or keyword. Search across up to 5000 entries. All stored locally at `~/Library/Application Support/PurePaste/history.json`.
+Filter by type, mode, or keyword. Search across up to 5000 entries. All stored locally at `~/Library/Application Support/ActionSense/history.json`.
 
 ## Screenshot
 
-![PurePaste Demo](screenshot/demo.gif)
+![ActionSense Demo](screenshot/demo.gif)
 
 ### PasteFlow — Smart Detection
 
@@ -80,44 +86,83 @@ Filter by type, mode, or keyword. Search across up to 5000 entries. All stored l
 
 **Option 1: Build from Source (free, no Apple Developer account needed)**
 ```bash
-git clone https://github.com/xiaoyunchengzhu/PurePaste.git
-cd PurePaste
-open PurePaste.xcodeproj
+git clone https://github.com/xiaoyunchengzhu/ActionSense.git
+cd ActionSense
+open ActionSense.xcodeproj
 # Cmd+R to run
 ```
 
 **Option 2: Download DMG**
-Download the latest build from [xiaoniubuniu.com/products/pure-paste](https://www.xiaoniubuniu.com/products/pure-paste/), drag to `/Applications`. Right-click → Open on first launch to bypass Gatekeeper.
+Download the latest build from [xiaoniubuniu.com/products/actionsense](https://www.xiaoniubuniu.com/products/actionsense/), drag to `/Applications`. Right-click → Open on first launch to bypass Gatekeeper.
 
 ## Architecture
 
 ```
-PurePaste/
-├── PurePasteApp.swift              # MenuBarExtra entry point
-├── PurePasteViewModel.swift        # Clipboard polling + mode state
-├── MenuView.swift                  # Menu bar dropdown UI
-├── TextProcessor.swift             # Plain text / HTML→Markdown
-├── ContentDetector.swift           # 11-type recognition engine
-├── ActionExecutor.swift            # Action dispatcher
-├── FloatingPanelView.swift         # SwiftUI floating panel
-├── FloatingPanelController.swift   # NSWindow manager
-├── HistoryEntry.swift              # History data model
-├── HistoryStore.swift              # JSON persistence + filter
-├── HistoryView.swift               # Search + filter UI
-├── HistoryWindowController.swift   # History window
+ActionSense/
+├── ActionSenseApp.swift              # MenuBarExtra entry point
+├── ActionSenseViewModel.swift        # State coordinator (DI-ready)
+├── ClipboardMonitor.swift            # NSPasteboard polling (P3: extracted)
+├── DetectorProtocol.swift            # ContentDetecting protocol + Registry
+├── Detectors/
+│   ├── BasicDetectors.swift          # URL / Email / Phone / IP
+│   ├── ColorDetector.swift           # Hex / RGB color parsing
+│   ├── MathDetector.swift            # Recursive descent parser
+│   └── TextDetectors.swift           # Address / Tracking / Date / JSON / Geo / HTML
+├── ContentDetector.swift             # DetectedContent + PasteFlowAction enums
+├── ActionExecutor.swift              # Action dispatcher
+├── FloatingPanelView.swift           # SwiftUI panel UI
+├── FloatingPanelController.swift     # NSWindow manager
+├── StoreManager.swift                # StoreKit 2 IAP (daily limit + Pro)
+├── HistoryEntry.swift / HistoryStore.swift / HistoryView.swift / HistoryWindowController.swift
+├── Localization.swift                # L10n with String(localized:) + fallback
+├── Localizable.xcstrings             # 88-key String Catalog (en + zh-Hans)
+├── PrivacyInfo.xcprivacy             # App Store privacy manifest
 └── Info.plist
+```
+
+**Data Flow:**
+
+```
+Clipboard Change
+      │
+      ▼
+ ClipboardMonitor (Timer + NSPasteboard, 0.5s poll)
+      │
+      ▼
+ DetectorRegistry.detect() (13 detectors, protocol-based priority chain)
+      │
+      ├── Detected? ──► FloatingPanel (NSWindow .nonactivatingPanel)
+      │                        │
+      │                        ▼
+      │                 PasteFlowAction dispatch
+      │                        │
+      │                        ▼
+      │                 ActionExecutor (URL→Browser, Color→Copy, etc.)
+      │
+      └── Not detected ──► Plain Text Mode (strip formatting) or no-op
 ```
 
 Key design decisions:
 
-- **Dead-loop prevention**: `internalWriteFlag` + `lastChangeCount` dual guard in clipboard polling
+- **Detector protocol**: each content type is an independent `ContentDetecting` implementation registered at startup. Add a new type without touching core code.
+- **Dead-loop prevention**: `internalWriteFlag` + `lastChangeCount` dual guard in `ClipboardMonitor`
 - **Math evaluator**: hand-written recursive descent parser (avoids `NSExpression` format-string traps)
-- **Floating panel**: `NSWindow.borderless` + `.nonactivatingPanel` — appears near cursor without stealing focus
+- **Floating panel**: `NSWindow.borderless` + `.nonactivatingPanel` — appears near cursor, dismisses on app switch or 5s timeout
+- **Dependency injection**: ViewModel receives dependencies via init (defaults to `.shared`); overridable for testing
 - **History**: in-memory filtering on JSON-loaded entries, no database dependency
 
 ## Tech Stack
 
 SwiftUI · AppKit · MenuBarExtra · NSPasteboard · Combine · SMAppService
+
+## Limitations
+
+- **macOS 14.0+ only** — relies on `MenuBarExtra` and modern SwiftUI APIs
+- **English & Chinese only** — Japanese planned for a future release
+- **No cloud / AI features** — all processing is local by design. That's the point.
+- **Not on the Mac App Store** — requires a $99/year Apple Developer account for notarization
+- **Some Chinese-specific detections** (address keywords, tracking numbers) are less useful for international users
+- **Floating panel dismiss** — panel closes on app switch or 5s timeout (no global mouse monitor, sandbox-compliant)
 
 ## License
 

@@ -38,12 +38,12 @@ final class HistoryWindowController {
             backing: .buffered,
             defer: false
         )
-        win.title = L10n.historyTitle
+        win.title = String(localized: "history.title")
         win.titlebarAppearsTransparent = true
         win.isReleasedWhenClosed = false
         win.contentView = hostingView
         win.center()
-        win.setFrameAutosaveName("PurePasteHistory")
+        win.setFrameAutosaveName("ActionSenseHistory")
         win.isMovableByWindowBackground = true
         win.level = .floating
         win.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
