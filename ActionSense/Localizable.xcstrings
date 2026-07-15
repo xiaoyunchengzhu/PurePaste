@@ -42,13 +42,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "macOS smart clipboard assistant.\nPlain text purification + PasteFlow intent detection + intent history.\n\nPrivacy: All processing is local. Your data never leaves this machine.\n\nFeedback: https://github.com/xiaoyunchengzhu/PurePaste/issues\nAuthor: xiaoniubuniu.com"
+            "value": "macOS smart clipboard assistant.\nPlain text purification + PasteFlow intent detection + intent history.\n\nPrivacy: All processing is local. Your data never leaves this machine.\n\nFeedback: https://github.com/xiaoyunchengzhu/ActionSense/issues\nAuthor: xiaoniubuniu.com"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "macOS 智能剪贴板助手。\n纯文本净化 + PasteFlow 智能识别 + 意图历史回溯。\n\n隐私声明：\n所有处理均在本地完成，数据永不上传。\n\n反馈：https://github.com/xiaoyunchengzhu/PurePaste/issues\n作者：xiaoniubuniu.com"
+            "value": "macOS 智能剪贴板助手。\n纯文本净化 + PasteFlow 智能识别 + 意图历史回溯。\n\n隐私声明：\n所有处理均在本地完成，数据永不上传。\n\n反馈：https://github.com/xiaoyunchengzhu/ActionSense/issues\n作者：xiaoniubuniu.com"
           }
         },
         "ja": {
@@ -776,13 +776,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Modes:\n🔵 Plain Text — Auto strip formatting, clean whitespace & CJK spacing\n🩵 PasteFlow  — Detect content type, pop up action panel near cursor\n\nPasteFlow Detection:\nURL / Email / Phone / Address / IP / Date\nColor / Math / Coordinates / Tracking / Rich HTML / JSON\n\nTips:\n· Press Enter to trigger when only one action is shown\n· Press ESC or click outside to dismiss the panel\n· Menu bar icon color reflects current mode\n\nHistory:\n· Click \"Clipboard History\" in the menu to open\n· 🟢 Fulfilled  🟠 Detected  ⚪ Plain\n· Filter by type, mode, or keyword\n\nPrivacy: All processing is local. Your data never leaves this machine.\nFeedback: https://github.com/xiaoyunchengzhu/PurePaste/issues\nAuthor: https://www.xiaoniubuniu.com"
+            "value": "Modes:\n🔵 Plain Text — Auto strip formatting, clean whitespace & CJK spacing\n🩵 PasteFlow  — Detect content type, pop up action panel near cursor\n\nPasteFlow Detection:\nURL / Email / Phone / Address / IP / Date\nColor / Math / Coordinates / Tracking / Rich HTML / JSON\n\nTips:\n· Press Enter to trigger when only one action is shown\n· Press ESC or click outside to dismiss the panel\n· Menu bar icon color reflects current mode\n\nHistory:\n· Click \"Clipboard History\" in the menu to open\n· 🟢 Fulfilled  🟠 Detected  ⚪ Plain\n· Filter by type, mode, or keyword\n\nPrivacy: All processing is local. Your data never leaves this machine.\nFeedback: https://github.com/xiaoyunchengzhu/ActionSense/issues\nAuthor: https://www.xiaoniubuniu.com"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "模式说明：\n🔵 纯文本模式 — 自动剥离复制内容的富文本格式，清理多余空白和 CJK 空格，写回剪贴板\n🩵 PasteFlow   — 智能识别复制内容类型，在鼠标旁弹出操作面板，一键直达\n\nPasteFlow 识别类型：\nURL / 邮箱 / 电话 / 地址 / IP / 日期\n颜色值 / 数学算式 / 经纬度 / 快递单号 / JSON\n\n操作提示：\n· 面板仅一个按钮时，按 Enter 直接触发\n· 按 ESC 或点击面板外部关闭面板\n· 菜单栏图标颜色随模式变化，一眼知状态\n\n历史记录：\n· 点击菜单「剪贴板历史」打开独立窗口\n· 🟢 意图完成  🟠 识别未操作  ⚪ 普通复制\n· 支持按类型、模式、关键词筛选\n\n隐私声明：所有处理均在本地完成，数据永不上传。\n问题反馈：https://github.com/xiaoyunchengzhu/PurePaste/issues\n作者网站：https://www.xiaoniubuniu.com"
+            "value": "模式说明：\n🔵 纯文本模式 — 自动剥离复制内容的富文本格式，清理多余空白和 CJK 空格，写回剪贴板\n🩵 PasteFlow   — 智能识别复制内容类型，在鼠标旁弹出操作面板，一键直达\n\nPasteFlow 识别类型：\nURL / 邮箱 / 电话 / 地址 / IP / 日期\n颜色值 / 数学算式 / 经纬度 / 快递单号 / JSON\n\n操作提示：\n· 面板仅一个按钮时，按 Enter 直接触发\n· 按 ESC 或点击面板外部关闭面板\n· 菜单栏图标颜色随模式变化，一眼知状态\n\n历史记录：\n· 点击菜单「剪贴板历史」打开独立窗口\n· 🟢 意图完成  🟠 识别未操作  ⚪ 普通复制\n· 支持按类型、模式、关键词筛选\n\n隐私声明：所有处理均在本地完成，数据永不上传。\n问题反馈：https://github.com/xiaoyunchengzhu/ActionSense/issues\n作者网站：https://www.xiaoniubuniu.com"
           }
         },
         "ja": {

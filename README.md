@@ -1,168 +1,283 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/macOS-14.0%2B-blue" alt="macOS">
-  <img src="https://img.shields.io/badge/Swift-5.0-orange" alt="Swift">
+  <img src="https://img.shields.io/badge/macOS-14.0%2B-blue?logo=apple" alt="macOS">
+  <img src="https://img.shields.io/badge/Swift-5.0-orange?logo=swift" alt="Swift">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
-  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><img src="https://img.shields.io/badge/Download-xiaoniubuniu.com-ff69b4" alt="Download"></a>
+  <img src="https://img.shields.io/github/stars/xiaoyunchengzhu/ActionSense?style=flat&color=yellow" alt="Stars">
+  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><img src="https://img.shields.io/badge/Download-Free-4CAF50?logo=safari" alt="Download"></a>
 </p>
 
 <p align="center"><b>English</b> | <a href="README_zh.md">中文</a></p>
 
-# ActionSense
+<br>
 
-<p align="center"><b>macOS Smart Clipboard Assistant</b> — understands what you copy, not just what it says.</p>
+<h1 align="center">ActionSense</h1>
 
 <p align="center">
-  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><b>🔗   Product Page & Download 🔗</b></a>
+  <b>Clipboard Automation Engine for macOS</b><br>
+  <sub>Not a clipboard manager. ActionSense understands <i>what</i> you copied — and does the next thing for you.</sub>
 </p>
 
 <p align="center">
-  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><img src="https://img.shields.io/badge/🌐_Landing_Page-xiaoniubuniu.com/products/actionsense-4CAF50?style=for-the-badge&logo=safari&logoColor=white&labelColor=555" alt="Landing Page"></a>
+  <img src="screenshot/demo.gif" alt="ActionSense Demo" width="640">
 </p>
+
+<p align="center">
+  <a href="https://www.xiaoniubuniu.com/products/action-sense/">
+    <b>🔗 xiaoniubuniu.com/products/action-sense</b>
+  </a>
+</p>
+
+<br>
 
 ---
 
-## Why I Built This
+## Why ActionSense?
 
-I got tired of the same manual steps after every copy. Copy a URL → open a browser → paste → Enter. Copy a hex color → open a color picker just to see it. Copy a math expression → reach for Calculator. ActionSense automates that second step.
+Clipboard managers remember **what** you copied. ActionSense knows **what to do next**.
 
-## What is ActionSense?
+| Clipboard Manager | ActionSense |
+|---|---|
+| Stores copy history | Detects content type |
+| Lets you search past items | Triggers the next action |
+| You still do the work | The app does it for you |
+| Ex: Paste, Maccy, Raycast Clipboard | **ActionSense** |
 
-ActionSense is a macOS menu bar app that watches your clipboard and acts on what you copy. Two modes:
+**Different problems, different tools.** Many ActionSense users run BOTH — a clipboard manager for history, and ActionSense for instant action.
 
-- **Plain Text Mode** — automatically strips rich formatting, cleans up whitespace and CJK spacing
-- **PasteFlow Mode** — detects the *type* of content you copied (URL, email, color, math expression...) and pops up a floating action panel at your mouse cursor. One click or <kbd>Enter</kbd> to act.
+### The moment that matters
 
-All processing is local. Your clipboard never leaves your machine.
+Every time you copy something, there's a gap:
 
-## Features
+```
+Copy URL        →  switch to browser  →  paste  →  Enter        (4 steps)
+Copy color      →  open color picker  →  paste  →  read value   (4 steps)
+Copy math expr  →  open Calculator    →  type   →  copy result   (4 steps)
+```
 
-### PasteFlow — Intent-Aware Clipboard
+ActionSense collapses this to:
 
-When you copy something, PasteFlow detects what it is and offers relevant actions:
+```
+Copy  →  ⌨️ Enter
+```
 
-| Type | Example | Actions |
-|------|---------|---------|
-| URL | `https://github.com/xiaoyunchengzhu/ActionSense` | Open in Browser (+ Open Repo for git) |
-| Email | `xiaoyunchengzhu@gmail.com` | Compose Mail |
-| Phone | `13812345678` | Call |
-| Color | `#FF5733` / `rgb(255,87,51)` | Copy HEX / Copy RGB |
-| Date/Time | `2024-01-15 14:00` | Add to Calendar |
-| Math | `(35+47)*1.2` | Copy Result (recursive descent parser) |
-| Coordinates | `39.9042, 116.4074` | Open in Maps |
-| JSON | `{"key": "value"}` | Formatted preview + Format / Minify |
-| Rich HTML | Web content with formatting | Convert to Markdown / Plain Text |
+**1 second instead of 10.** Hundreds of times a day.
 
-- <kbd>Enter</kbd> triggers the action directly when there's only one button
-- <kbd>Esc</kbd> or click outside to dismiss
+---
 
-### Plain Text Mode
+## How It Works
 
-Strips RTF/HTML formatting, collapses excess newlines, removes unnecessary spaces between CJK characters, compresses multiple spaces into one. Keeps English word spacing intact.
+```
+   You copy something
+          │
+          ▼
+┌─────────────────────┐
+│  Detector Pipeline  │  10 detectors run in priority order
+│  URL? Email? JSON?  │  First match wins
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│  Floating Panel     │  Appears at your cursor
+│  ActionSense knows  │  Shows what was detected + available actions
+│  it's a URL         │
+│  → Open in Browser  │  Press Enter or click
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│  Action Executor    │  Opens browser, copies hex, formats JSON...
+│  Job done           │  Panel dismisses
+└─────────────────────┘
+```
 
-### Intent History
+**All local.** Your clipboard never leaves your machine. No cloud, no analytics, no network requests.
 
-Every clipboard change is recorded with metadata:
-- 🟢 Intent fulfilled (action taken)
-- 🟠 Detected but not acted upon
-- ⚪ Plain text / unrecognized
+---
 
-Filter by type, mode, or keyword. Search across up to 5000 entries. All stored locally at `~/Library/Application Support/ActionSense/history.json`.
+## Who is this for?
 
-## Screenshot
+### 👨‍💻 Developers
 
-![ActionSense Demo](screenshot/demo.gif)
+| You copy | ActionSense does |
+|---|---|
+| A GitHub issue URL | → Opens the issue in browser |
+| `{"name":"foo","items":[1,2,3]}` | → Format or minify JSON, ready to paste |
+| A hex color `#FF5733` from design specs | → Copy HEX or RGB, paste into CSS |
+| A stack trace or error message | → Clean the formatting, ready to search |
+| A repo URL | → Open in browser OR open in Terminal (`openRepo`) |
 
-### PasteFlow — Smart Detection
+### 🎨 Designers
 
-| URL Detection | Color Preview | Math Calculation |
-|:---:|:---:|:---:|
-| ![URL](screenshot/url-detect.png) | ![Color](screenshot/color-detect.png) | ![Math](screenshot/math-detect.png) |
+| You copy | ActionSense does |
+|---|---|
+| `#FF5733` from Figma | → Preview the color + copy HEX or RGB |
+| `rgb(255, 87, 51)` from a style guide | → Same — both formats detected |
+| A design spec URL | → Open in browser |
 
-### Intent History
+### 📊 Researchers & Writers
 
-![History](screenshot/history.png)
+| You copy | ActionSense does |
+|---|---|
+| A URL with rich formatting from Safari | → Strip formatting, convert to Markdown |
+| A date from a paper `2024-03-15` | → Add to Calendar |
+| Coordinates `39.9042, 116.4074` | → Open in Apple Maps |
+| An email address from a profile page | → Open Mail composer |
+
+### ⚡ Power Users
+
+ActionSense runs as a menu bar app. Enable **Plain Text Mode** and every copy is automatically stripped of formatting, CJK spacing cleaned, and whitespace normalized — without touching a shortcut.
+
+**PasteFlow Mode** gives you the floating action panel. **Plain Text Mode** silently cleans everything. You choose per workflow.
+
+---
+
+## Supported Detections & Actions
+
+| Content Type | Detection Pattern | Available Actions |
+|---|---|---|
+| **URL** | `https://...`, `http://...` | Open in Browser, Open Repo (GitHub/GitLab/Bitbucket) |
+| **Email** | `user@domain.com` | Compose Mail |
+| **Phone** | Chinese/US/International numbers | Call |
+| **Color** | `#HEX`, `rgb()`, `rgba()` | Copy HEX, Copy RGB |
+| **Math Expression** | `(35+47)*1.2`, `sqrt(144)` | Calculate & Copy Result |
+| **JSON** | Valid JSON strings | Format (pretty-print), Minify |
+| **Date/Time** | ISO dates, common formats | Add to Calendar |
+| **Coordinates** | `lat, lng` decimal format | Open in Apple Maps |
+| **Rich HTML** | Clipboard HTML data | Convert to Markdown, Convert to Plain Text |
+
+---
+
+## Detector → Action Pipeline
+
+The architecture is designed for extension. Each content type is an independent **Detector** implementing a single protocol:
+
+```swift
+protocol ContentDetecting {
+    var identifier: String { get }   // "url", "color", "json"...
+    var priority: Int { get }        // detection order
+    func detect(_ text: String, htmlData: Data?) -> DetectedContent?
+}
+```
+
+**Register a detector → it joins the pipeline.** No switch statements, no central dispatcher to modify.
+
+```swift
+// Adding a custom detector
+struct JiraTicketDetector: ContentDetecting {
+    let identifier = "jira"
+    let priority = 15
+
+    func detect(_ text: String, htmlData: Data?) -> DetectedContent? {
+        // Match PROJ-1234 pattern
+        let pattern = /[A-Z]{2,10}-\d{1,6}/
+        guard text.contains(pattern) else { return nil }
+        return .jiraTicket(String(text.trimmingPrefix(pattern)))
+    }
+}
+
+// One line to activate
+DetectorRegistry.shared.register(JiraTicketDetector())
+```
+
+**Detectors don't know about actions. Actions don't know about detectors.** The protocol boundary keeps them decoupled — add a new content type, and it automatically becomes actionable.
+
+---
+
+## What's coming
+
+The Detector → Action architecture makes ActionSense a **clipboard automation platform**, not a static tool.
+
+| Phase | What |
+|---|---|
+| **Now ✅** | 10 detectors, 14 actions, Plain Text Mode, History |
+| **Next** | Jira ticket detection, Slack channel links, Figma URLs, terminal commands |
+| **Planned** | Custom user-defined detectors (regex → action mapping), AppleScript/Shortcuts integration |
+| **Vision** | `IF clipboard matches X THEN execute Y` — a rule engine anyone can configure |
+
+The end goal: **you define the pattern and the action. ActionSense runs it.** No coding required for basic workflows. Full Swift API for developers.
+
+---
 
 ## Installation
 
-**Option 1: Build from Source (free, no Apple Developer account needed)**
+### Option 1: Download DMG
+
+Download from **[xiaoniubuniu.com/products/action-sense](https://www.xiaoniubuniu.com/products/action-sense/)**.
+
+Open DMG → drag `ActionSense.app` to the `Applications` folder.
+
+> **First launch:** Right-click the app → **Open**. Or go to System Settings → Privacy & Security → Open Anyway. This is a one-time Gatekeeper bypass for unsigned apps.
+
+### Option 2: Build from Source
+
 ```bash
 git clone https://github.com/xiaoyunchengzhu/ActionSense.git
 cd ActionSense
 open ActionSense.xcodeproj
-# Cmd+R to run
+# Product → Run (⌘R)
 ```
 
-**Option 2: Download DMG**
-Download the latest build from [xiaoniubuniu.com/products/action-sense](https://www.xiaoniubuniu.com/products/action-sense/). Open the DMG, drag `ActionSense.app` to the `Applications` folder. **First launch: Right-click the app → Open** to bypass Gatekeeper (System Settings → Privacy & Security → Open Anyway also works).
+No dependencies to install. Pure Swift + SwiftUI + AppKit.
 
-## Architecture
+### Build DMG locally
 
-```
-ActionSense/
-├── ActionSenseApp.swift              # MenuBarExtra entry point
-├── ActionSenseViewModel.swift        # State coordinator (DI-ready)
-├── ClipboardMonitor.swift            # NSPasteboard polling (P3: extracted)
-├── DetectorProtocol.swift            # ContentDetecting protocol + Registry
-├── Detectors/
-│   ├── BasicDetectors.swift          # URL / Email / Phone
-│   ├── ColorDetector.swift           # Hex / RGB color parsing
-│   ├── MathDetector.swift            # Recursive descent parser
-│   └── TextDetectors.swift           # Address / Date / JSON / Geo / HTML
-├── ContentDetector.swift             # DetectedContent + PasteFlowAction enums
-├── ActionExecutor.swift              # Action dispatcher
-├── FloatingPanelView.swift           # SwiftUI panel UI
-├── FloatingPanelController.swift     # NSWindow manager
-├── HistoryEntry.swift / HistoryStore.swift / HistoryView.swift / HistoryWindowController.swift
-├── Localization.swift                # L10n with String(localized:) + fallback
-├── Localizable.xcstrings             # 88-key String Catalog (en + zh-Hans)
-├── PrivacyInfo.xcprivacy             # App Store privacy manifest
-└── Info.plist
+```bash
+./scripts/build_dmg.sh
 ```
 
-**Data Flow:**
+Outputs to `release/`.
 
-```
-Clipboard Change
-      │
-      ▼
- ClipboardMonitor (Timer + NSPasteboard, 0.5s poll)
-      │
-      ▼
- DetectorRegistry.detect() (10 detectors, protocol-based priority chain)
-      │
-      ├── Detected? ──► FloatingPanel (NSWindow .nonactivatingPanel)
-      │                        │
-      │                        ▼
-      │                 PasteFlowAction dispatch
-      │                        │
-      │                        ▼
-      │                 ActionExecutor (URL→Browser, Color→Copy, etc.)
-      │
-      └── Not detected ──► Plain Text Mode (strip formatting) or no-op
-```
-
-Key design decisions:
-
-- **Detector protocol**: each content type is an independent `ContentDetecting` implementation registered at startup. Add a new type without touching core code.
-- **Dead-loop prevention**: `internalWriteFlag` + `lastChangeCount` dual guard in `ClipboardMonitor`
-- **Math evaluator**: hand-written recursive descent parser (avoids `NSExpression` format-string traps)
-- **Floating panel**: `NSWindow.borderless` + `.nonactivatingPanel` — appears near cursor, dismisses on app switch or 5s timeout
-- **Dependency injection**: ViewModel receives dependencies via init (defaults to `.shared`); overridable for testing
-- **History**: in-memory filtering on JSON-loaded entries, no database dependency
+---
 
 ## Tech Stack
 
-SwiftUI · AppKit · MenuBarExtra · NSPasteboard · Combine · SMAppService
+**SwiftUI · AppKit · MenuBarExtra · NSPasteboard · Combine · SMAppService**
 
-## Limitations
+- Menu bar app — zero dock space
+- Floating panel at cursor with `.nonactivatingPanel` window level
+- 0.5s clipboard polling via Timer + `NSPasteboard.changeCount`
+- Hand-written recursive descent math parser (no `NSExpression` eval risks)
+- Protocol-based detector registry with dependency injection
+- 5 languages: EN, ZH-Hans, JA, FR, DE
 
-- **macOS 14.0+ only** — relies on `MenuBarExtra` and modern SwiftUI APIs
+---
 
-- **No cloud / AI features** — all processing is local by design. That's the point.
-- **Fully free & open source** — no IAP, no usage limits, no Pro version. MIT license.
-- **Localization** — 5 languages supported (EN/ZH/JA/FR/DE). Some advanced UI strings default to English.
-- **Floating panel dismiss** — panel closes on app switch or 5s timeout (no global mouse monitor, sandbox-compliant)
+## Project Structure
+
+```
+ActionSense/
+├── ActionSenseApp.swift          # MenuBarExtra entry point
+├── ActionSenseViewModel.swift    # State coordinator (DI-ready)
+├── ClipboardMonitor.swift        # NSPasteboard polling
+├── DetectorProtocol.swift        # ContentDetecting protocol + Registry
+├── Detectors/
+│   ├── BasicDetectors.swift      # URL / Email / Phone
+│   ├── ColorDetector.swift       # Hex / RGB / RGBA parsing
+│   ├── MathDetector.swift        # Recursive descent parser
+│   └── TextDetectors.swift       # Date / JSON / Geo / HTML
+├── ContentDetector.swift         # DetectedContent + PasteFlowAction enums
+├── ActionExecutor.swift          # Action dispatcher
+├── FloatingPanelView.swift       # SwiftUI panel at cursor
+├── FloatingPanelController.swift # NSWindow manager
+├── History/                      # Intent history + search
+├── Localization.swift            # L10n with String(localized:)
+└── Localizable.xcstrings         # String Catalog (en + zh-Hans)
+```
+
+---
+
+## Contributing
+
+New detectors are the easiest way to contribute. Pick a content type, implement the protocol, and open a PR.
+
+See [DetectorProtocol.swift](ActionSense/DetectorProtocol.swift) for the interface and existing detectors for examples.
+
+---
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/xiaoyunchengzhu">xiaoyunchengzhu</a></sub>
+</p>
