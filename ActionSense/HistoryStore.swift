@@ -14,12 +14,7 @@ final class HistoryStore: ObservableObject {
     private let fileURL: URL
 
     enum FilterMode: String, CaseIterable {
-        case all = "全部"
-        case intentFulfilled = "意图"
-        case detectedOnly = "识别"
-        case unrecognized = "未识别"
-        case plainText = "纯文本"
-
+        case all, intentFulfilled, detectedOnly, unrecognized, plainText
         var id: String { rawValue }
     }
 
@@ -27,7 +22,12 @@ final class HistoryStore: ObservableObject {
     @Published var filterByType: String? = nil
 
     private init() {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            // 极端沙盒环境下可能无 Application Support 目录，退到临时目录
+            fileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("ActionSense_history.json")
+            entries = []
+            return
+        }
         let dir = appSupport.appendingPathComponent("ActionSense")
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         fileURL = dir.appendingPathComponent("history.json")

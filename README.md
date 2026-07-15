@@ -38,18 +38,14 @@ When you copy something, PasteFlow detects what it is and offers relevant action
 
 | Type | Example | Actions |
 |------|---------|---------|
-| URL | `https://www.xiaoniubuniu.com` | Open in Browser |
+| URL | `https://github.com/xiaoyunchengzhu/ActionSense` | Open in Browser (+ Open Repo for git) |
 | Email | `xiaoyunchengzhu@gmail.com` | Compose Mail |
 | Phone | `13812345678` | Call |
-| Address | `北京市海淀区...` | Open in Maps |
-| IP | `192.168.1.1` | Ping |
 | Color | `#FF5733` / `rgb(255,87,51)` | Copy HEX / Copy RGB |
 | Date/Time | `2024-01-15 14:00` | Add to Calendar |
-| Math | `(35+47)*1.2` | Copy Result (custom recursive descent parser) |
+| Math | `(35+47)*1.2` | Copy Result (recursive descent parser) |
 | Coordinates | `39.9042, 116.4074` | Open in Maps |
-| Tracking | `SF123456789012` | Track Package |
-| JSON | `{"key": "value"}` | Format / Minify |
-| Git URL | `github.com/user/repo` | Open in Browser + Open Repo |
+| JSON | `{"key": "value"}` | Formatted preview + Format / Minify |
 | Rich HTML | Web content with formatting | Convert to Markdown / Plain Text |
 
 - <kbd>Enter</kbd> triggers the action directly when there's only one button
@@ -104,15 +100,14 @@ ActionSense/
 ├── ClipboardMonitor.swift            # NSPasteboard polling (P3: extracted)
 ├── DetectorProtocol.swift            # ContentDetecting protocol + Registry
 ├── Detectors/
-│   ├── BasicDetectors.swift          # URL / Email / Phone / IP
+│   ├── BasicDetectors.swift          # URL / Email / Phone
 │   ├── ColorDetector.swift           # Hex / RGB color parsing
 │   ├── MathDetector.swift            # Recursive descent parser
-│   └── TextDetectors.swift           # Address / Tracking / Date / JSON / Geo / HTML
+│   └── TextDetectors.swift           # Address / Date / JSON / Geo / HTML
 ├── ContentDetector.swift             # DetectedContent + PasteFlowAction enums
 ├── ActionExecutor.swift              # Action dispatcher
 ├── FloatingPanelView.swift           # SwiftUI panel UI
 ├── FloatingPanelController.swift     # NSWindow manager
-├── StoreManager.swift                # StoreKit 2 IAP (daily limit + Pro)
 ├── HistoryEntry.swift / HistoryStore.swift / HistoryView.swift / HistoryWindowController.swift
 ├── Localization.swift                # L10n with String(localized:) + fallback
 ├── Localizable.xcstrings             # 88-key String Catalog (en + zh-Hans)
@@ -129,7 +124,7 @@ Clipboard Change
  ClipboardMonitor (Timer + NSPasteboard, 0.5s poll)
       │
       ▼
- DetectorRegistry.detect() (13 detectors, protocol-based priority chain)
+ DetectorRegistry.detect() (10 detectors, protocol-based priority chain)
       │
       ├── Detected? ──► FloatingPanel (NSWindow .nonactivatingPanel)
       │                        │
@@ -158,10 +153,10 @@ SwiftUI · AppKit · MenuBarExtra · NSPasteboard · Combine · SMAppService
 ## Limitations
 
 - **macOS 14.0+ only** — relies on `MenuBarExtra` and modern SwiftUI APIs
-- **English & Chinese only** — Japanese planned for a future release
+
 - **No cloud / AI features** — all processing is local by design. That's the point.
-- **Not on the Mac App Store** — requires a $99/year Apple Developer account for notarization
-- **Some Chinese-specific detections** (address keywords, tracking numbers) are less useful for international users
+- **Fully free & open source** — no IAP, no usage limits, no Pro version. MIT license.
+- **Localization** — 5 languages supported (EN/ZH/JA/FR/DE). Some advanced UI strings default to English.
 - **Floating panel dismiss** — panel closes on app switch or 5s timeout (no global mouse monitor, sandbox-compliant)
 
 ## License

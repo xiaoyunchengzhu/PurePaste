@@ -38,7 +38,7 @@ final class HistoryWindowController {
             backing: .buffered,
             defer: false
         )
-        win.title = String(localized: "history.title")
+        win.title = L10n.historyTitle
         win.titlebarAppearsTransparent = true
         win.isReleasedWhenClosed = false
         win.contentView = hostingView

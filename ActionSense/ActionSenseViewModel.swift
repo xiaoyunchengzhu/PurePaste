@@ -31,7 +31,6 @@ final class ActionSenseViewModel: ObservableObject {
     private let registry: DetectorRegistry
     private let panelController: FloatingPanelController
     private let historyStore: HistoryStore
-    let storeManager: StoreManager
 
     // MARK: - 发布的状态属性
 
@@ -51,13 +50,11 @@ final class ActionSenseViewModel: ObservableObject {
     init(monitor: ClipboardMonitor? = nil,
          registry: DetectorRegistry? = nil,
          panel: FloatingPanelController? = nil,
-         history: HistoryStore? = nil,
-         storeManager: StoreManager? = nil) {
+         history: HistoryStore? = nil) {
         self.monitor = monitor ?? ClipboardMonitor()
         self.registry = registry ?? .shared
         self.panelController = panel ?? .shared
         self.historyStore = history ?? .shared
-        self.storeManager = storeManager ?? .shared
 
         self.monitor.onClipboardChange = { [weak self] text, htmlData in
             self?.handleClipboardChange(text: text, htmlData: htmlData)
@@ -66,10 +63,8 @@ final class ActionSenseViewModel: ObservableObject {
         Task { await syncLoginItemState() }
     }
 
-    // MARK: - Pro 状态
-
-    var isPasteFlowAvailable: Bool { storeManager.canUsePasteFlow }
-    var remainingDailyCount: Int { storeManager.remainingCount }
+    /// PasteFlow 始终可用（免费开源，无使用限制）
+    var isPasteFlowAvailable: Bool { true }
 
     // MARK: - 剪贴板处理
 
@@ -78,8 +73,8 @@ final class ActionSenseViewModel: ObservableObject {
 
         lastCopyWasNonText = false
 
-        // PasteFlow 模式
-        if mode == .pasteFlow, storeManager.canUsePasteFlow {
+        // PasteFlow 模式（免费无限制）
+        if mode == .pasteFlow {
             isProcessing = true
             if let detected = registry.detect(text, htmlData: htmlData) {
                 panelController.onActionExecuted = { [weak self] action in
@@ -88,7 +83,6 @@ final class ActionSenseViewModel: ObservableObject {
                 panelController.show(content: detected, at: NSEvent.mouseLocation)
                 lastConversionPreview = "[\(detected.displayType)] \(String(detected.previewText.prefix(40)))"
                 conversionCount += 1
-                storeManager.recordUsage()
                 historyStore.addEntry(text: text, mode: "pasteFlow", detectedType: detected.displayType)
             } else {
                 historyStore.addEntry(text: text, mode: "pasteFlow", detectedType: nil)
@@ -123,17 +117,6 @@ final class ActionSenseViewModel: ObservableObject {
         monitor.markInternalWrite()
     }
 
-    // MARK: - 购买 / 升级 Pro
-
-    /// 触发 StoreKit 购买
-    func purchasePro() {
-        Task { await storeManager.purchase() }
-    }
-
-    /// 恢复购买
-    func restorePurchase() {
-        Task { await storeManager.restorePurchases() }
-    }
 
     // MARK: - 开机启动管理
 
@@ -184,8 +167,4 @@ final class ActionSenseViewModel: ObservableObject {
 
     // MARK: - 试用提示判断
 
-    /// 是否应该在菜单中显示升级提示
-    var shouldShowUpgradePrompt: Bool {
-        !storeManager.isPro && storeManager.remainingCount <= 3
-    }
 }

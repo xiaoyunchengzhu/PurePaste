@@ -20,14 +20,14 @@
 		AABBCC0000000000000000AA /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001B /* HistoryView.swift */; };
 		AABBCC0000000000000000AB /* HistoryWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001C /* HistoryWindowController.swift */; };
 		AABBCC0000000000000000AC /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001D /* Localization.swift */; };
-		AABBCC0000000000000000AE /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001F /* StoreManager.swift */; };
 		AABBCC0000000000000000B0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000021 /* Localizable.xcstrings */; };
 		AABBCC0000000000000000B6 /* ClipboardMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000026 /* ClipboardMonitor.swift */; };
-		AABBCC00000000000000000B1 /* DetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000021 /* DetectorProtocol.swift */; };
+		AABBCC00000000000000000B1 /* DetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000027 /* DetectorProtocol.swift */; };
 		AABBCC00000000000000000B2 /* MathDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000022 /* MathDetector.swift */; };
 		AABBCC00000000000000000B3 /* BasicDetectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000023 /* BasicDetectors.swift */; };
 		AABBCC00000000000000000B4 /* ColorDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000024 /* ColorDetector.swift */; };
 		AABBCC00000000000000000B5 /* TextDetectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000025 /* TextDetectors.swift */; };
+		AABBCC0000000000000000B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AABBCC000000000000000028 /* Assets.xcassets */; };
 		AABBCC0000000000000000AD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AABBCC00000000000000001E /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -46,14 +46,14 @@
 		AABBCC00000000000000001B /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		AABBCC00000000000000001C /* HistoryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryWindowController.swift; sourceTree = "<group>"; };
 		AABBCC00000000000000001D /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
-		AABBCC00000000000000001F /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000021 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		AABBCC000000000000000026 /* ClipboardMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardMonitor.swift; sourceTree = "<group>"; };
-		AABBCC000000000000000021 /* DetectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectorProtocol.swift; sourceTree = "<group>"; };
+		AABBCC000000000000000027 /* DetectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectorProtocol.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000022 /* MathDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detectors/MathDetector.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000023 /* BasicDetectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detectors/BasicDetectors.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000024 /* ColorDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detectors/ColorDetector.swift; sourceTree = "<group>"; };
 		AABBCC000000000000000025 /* TextDetectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detectors/TextDetectors.swift; sourceTree = "<group>"; };
+		AABBCC000000000000000028 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AABBCC00000000000000001E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AABBCC000000000000000020 /* PurePaste.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PurePaste.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -89,14 +89,14 @@
 				AABBCC000000000000000017 /* FloatingPanelView.swift */,
 				AABBCC000000000000000018 /* FloatingPanelController.swift */,
 				AABBCC00000000000000001D /* Localization.swift */,
-					AABBCC00000000000000001F /* StoreManager.swift */,
 					AABBCC000000000000000021 /* Localizable.xcstrings */,
-					AABBCC000000000000000021 /* DetectorProtocol.swift */,
+					AABBCC000000000000000027 /* DetectorProtocol.swift */,
 					AABBCC000000000000000026 /* ClipboardMonitor.swift */,
 					AABBCC000000000000000022 /* MathDetector.swift */,
 					AABBCC000000000000000023 /* BasicDetectors.swift */,
 					AABBCC000000000000000024 /* ColorDetector.swift */,
 					AABBCC000000000000000025 /* TextDetectors.swift */,
+					AABBCC000000000000000028 /* Assets.xcassets */,
 					AABBCC00000000000000001E /* PrivacyInfo.xcprivacy */,
 				AABBCC000000000000000019 /* HistoryEntry.swift */,
 				AABBCC00000000000000001A /* HistoryStore.swift */,
@@ -175,6 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AABBCC0000000000000000AD /* PrivacyInfo.xcprivacy in Resources */,
+				AABBCC0000000000000000B7 /* Assets.xcassets in Resources */,
 				AABBCC0000000000000000B0 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -199,7 +200,6 @@
 				AABBCC0000000000000000A9 /* HistoryStore.swift in Sources */,
 				AABBCC0000000000000000AA /* HistoryView.swift in Sources */,
 				AABBCC0000000000000000AB /* HistoryWindowController.swift in Sources */,
-			AABBCC0000000000000000AE /* StoreManager.swift in Sources */,
 				AABBCC00000000000000000B5 /* TextDetectors.swift in Sources */,
 				AABBCC00000000000000000B4 /* ColorDetectors.swift in Sources */,
 				AABBCC00000000000000000B3 /* BasicDetectors.swift in Sources */,
@@ -333,7 +333,7 @@
 		AABBCC000000000000000072 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -358,7 +358,7 @@
 		AABBCC000000000000000073 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -375,7 +375,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.actionsense.app;
 				PRODUCT_NAME = "ActionSense";
-				CODE_SIGN_ENTITLEMENTS = PurePaste/ActionSense.entitlements;
+				CODE_SIGN_ENTITLEMENTS = ActionSense/ActionSense.entitlements;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};

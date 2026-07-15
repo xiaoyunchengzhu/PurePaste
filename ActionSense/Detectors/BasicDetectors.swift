@@ -40,15 +40,6 @@ final class PhoneDetector: ContentDetecting {
     }
 }
 
-final class IPDetector: ContentDetecting {
-    let identifier = "ip"; let priority = 1
-
-    func detect(_ text: String, htmlData: Data?) -> DetectedContent? {
-        let pattern = "^((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)$"
-        guard text.range(of: pattern, options: .regularExpression) != nil else { return nil }
-        return .ipAddress(text)
-    }
-}
 
 final class ImageURLDetector: ContentDetecting {
     let identifier = "imageURL"; let priority = 4

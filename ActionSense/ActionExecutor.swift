@@ -13,14 +13,8 @@ enum ActionExecutor {
             openMail(for: content)
         case .callPhone:
             callPhone(for: content)
-        case .openMaps:
-            openMaps(for: content)
         case .addToCalendar:
             addToCalendar(for: content)
-        case .pingIP:
-            pingIP(for: content)
-        case .trackPackage:
-            trackPackage(for: content)
         case .copyColorHex:
             copyColorHex(for: content)
         case .copyColorRGB:
@@ -77,17 +71,6 @@ enum ActionExecutor {
         }
     }
 
-    // MARK: - 地图查看
-
-    private static func openMaps(for content: DetectedContent) {
-        guard case .address(let addr) = content else { return }
-        // 使用 Apple Maps URL Scheme
-        let encoded = addr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? addr
-        if let url = URL(string: "https://maps.apple.com/?q=\(encoded)") {
-            NSWorkspace.shared.open(url)
-        }
-    }
-
     // MARK: - 添加到日历
 
     private static func addToCalendar(for content: DetectedContent) {
@@ -101,9 +84,9 @@ enum ActionExecutor {
         formatter.dateFormat = L10n.isChinese ? "yyyy年M月d日 HH:mm" : "MMM d, yyyy HH:mm"
 
         let info = """
-        \(String(localized: "calendar.title"))
-        \(String(localized: "calendar.time"))：\(formatter.string(from: date))
-        \(String(localized: "calendar.original"))：\(original)
+        \(L10n.calendarEventTitle)
+        \(L10n.calendarTime)：\(formatter.string(from: date))
+        \(L10n.calendarOriginal)：\(original)
         """
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
@@ -113,33 +96,6 @@ enum ActionExecutor {
         // macOS 不支持直接 add-event URL，替代方案是打开日历 App
         if let calendarURL = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "ical://")!) {
             NSWorkspace.shared.open(calendarURL)
-        }
-    }
-
-    // MARK: - Ping IP
-
-    private static func pingIP(for content: DetectedContent) {
-        guard case .ipAddress(let ip) = content else { return }
-        // 复制 ping 命令到剪贴板，打开终端（沙盒兼容）
-        let cmd = "ping -c 4 \(ip)"
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(cmd, forType: .string)
-
-        // 打开终端 App（用户 Cmd+V 即可执行）
-        if let terminalURL = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "terminal://")!) {
-            NSWorkspace.shared.open(terminalURL)
-        }
-    }
-
-    // MARK: - 查快递
-
-    private static func trackPackage(for content: DetectedContent) {
-        guard case .tracking(let number, _) = content else { return }
-        // 使用百度搜索快递单号
-        let encoded = number.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? number
-        if let url = URL(string: "https://www.baidu.com/s?wd=\(encoded)%20%E5%BF%AB%E9%80%92") {
-            NSWorkspace.shared.open(url)
         }
     }
 

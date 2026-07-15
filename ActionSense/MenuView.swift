@@ -27,10 +27,6 @@ struct MenuView: View {
 
             Divider()
 
-            // ---- Pro / 升级 ----
-            Divider()
-            proSection
-
             // ---- 历史记录 ----
             Divider()
             historyButton
@@ -226,110 +222,20 @@ struct MenuView: View {
             HStack(spacing: 6) {
                 Image(systemName: "globe")
                     .frame(width: 18)
-                Text(String(localized: "menu.language"))
+                Text(L10n.languageLabel)
             }
         }
         .pickerStyle(.menu)
         .padding(.horizontal, 12)
         .padding(.vertical, 2)
-        .alert(String(localized: "language.restartTitle"), isPresented: $showRestartAlert) {
-            Button(String(localized: "language.restartNow"), role: .destructive) {
+        .alert(L10n.languageRestartTitle, isPresented: $showRestartAlert) {
+            Button(L10n.languageRestartNow, role: .destructive) {
                 langManager.restart()
             }
-            Button(String(localized: "language.restartLater"), role: .cancel) {}
+            Button(L10n.languageRestartLater, role: .cancel) {}
         } message: {
-            Text(String(localized: "language.restartMsg"))
+            Text(L10n.languageRestartMsg)
         }
-    }
-
-    // MARK: - Pro / 升级区域
-
-    private var proSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if viewModel.storeManager.isPro {
-                // Pro 已激活
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                        .foregroundColor(.teal)
-                        .font(.system(size: 11))
-                    Text(String(localized: "pro.title"))
-                        .font(.system(size: 11))
-                        .foregroundColor(.teal)
-                }
-                .padding(.horizontal, 12)
-            } else {
-                // 免费版：显示剩余次数
-                HStack {
-                    Image(systemName: "gift.fill")
-                        .foregroundColor(.blue)
-                        .font(.system(size: 11))
-                    Text(L10n.isChinese
-                        ? "今日剩余 \(viewModel.remainingDailyCount) 次 PasteFlow"
-                        : "\(viewModel.remainingDailyCount) PasteFlow remaining today")
-                        .font(.system(size: 11))
-                        .foregroundColor(.secondary)
-                }
-                .padding(.horizontal, 12)
-
-                // 购买按钮
-                Button(action: { viewModel.purchasePro() }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "cart.fill")
-                            .frame(width: 18)
-                        Text(String(localized: "pro.upgrade"))
-                        Spacer()
-                        Text("$4.99")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 5)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-
-                // 购买错误提示
-                if let error = viewModel.storeManager.purchaseError {
-                    Text(error)
-                        .font(.system(size: 10))
-                        .foregroundColor(.red)
-                        .padding(.horizontal, 12)
-                }
-
-                // 恢复购买
-                Button(action: { viewModel.restorePurchase() }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "arrow.clockwise")
-                            .frame(width: 18)
-                        Text(String(localized: "pro.restore"))
-                            .font(.system(size: 11))
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 3)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-            }
-
-            // Debug 切换
-            #if DEBUG
-            Button(action: { viewModel.storeManager.isPro.toggle() }) {
-                HStack(spacing: 6) {
-                    Image(systemName: viewModel.storeManager.isPro ? "key.fill" : "key")
-                        .frame(width: 18)
-                    Text(viewModel.storeManager.isPro
-                        ? (L10n.isChinese ? "取消 Pro (Debug)" : "Deactivate Pro (Debug)")
-                        : (L10n.isChinese ? "模拟 Pro (Debug)" : "Simulate Pro (Debug)"))
-                        .font(.system(size: 11))
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 3)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            #endif
-        }
-        .padding(.vertical, 6)
     }
 
     // MARK: - 历史记录按钮

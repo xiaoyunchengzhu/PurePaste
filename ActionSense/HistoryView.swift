@@ -5,6 +5,7 @@ import SwiftUI
 struct HistoryView: View {
     @ObservedObject var store = HistoryStore.shared
     @State private var hoveredEntryID: UUID? = nil
+    @State private var showClearConfirmation = false
     @FocusState private var isSearchFocused: Bool
 
     var body: some View {
@@ -40,7 +41,7 @@ struct HistoryView: View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
-            TextField(String(localized: "history.search"), text: $store.searchText)
+            TextField(L10n.historySearchPlaceholder, text: $store.searchText)
                 .textFieldStyle(.plain)
                 .font(.system(size: 14))
                 .focused($isSearchFocused)
@@ -124,7 +125,7 @@ struct HistoryView: View {
                     Image(systemName: store.searchText.isEmpty ? "tray" : "magnifyingglass")
                         .font(.system(size: 28))
                         .foregroundColor(.secondary.opacity(0.5))
-                    Text(store.searchText.isEmpty ? String(localized: "history.empty") : String(localized: "history.noMatch"))
+                    Text(store.searchText.isEmpty ? L10n.historyEmpty : L10n.historyNoMatch)
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
                 }
@@ -138,10 +139,10 @@ struct HistoryView: View {
                             hoveredEntryID = hovering ? entry.id : nil
                         }
                         .contextMenu {
-                            Button(String(localized: "history.copyText")) {
+                            Button(L10n.historyCopyText) {
                                 copyToClipboard(entry.text)
                             }
-                            Button(String(localized: "history.deleteEntry")) {
+                            Button(L10n.historyDeleteEntry) {
                                 store.deleteEntry(entry)
                             }
                         }
@@ -181,7 +182,7 @@ struct HistoryView: View {
                     }
 
                     if !entry.isIntentFulfilled && entry.detectedType != nil {
-                        badge(String(localized: "history.notActed"), color: .orange)
+                        badge(L10n.historyNotActed, color: .orange)
                     }
 
                     Text(entry.mode)
@@ -209,17 +210,25 @@ struct HistoryView: View {
     private var bottomBar: some View {
         HStack {
             Button(action: {
-                store.clearAll()
+                showClearConfirmation = true
             }) {
-                Text(String(localized: "history.clearAll"))
+                Text(L10n.historyClearAll)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
             .buttonStyle(.plain)
+            .alert(L10n.confirmClearTitle, isPresented: $showClearConfirmation) {
+                Button(L10n.confirmClearCancel, role: .cancel) {}
+                Button(L10n.confirmClearOK, role: .destructive) {
+                    store.clearAll()
+                }
+            } message: {
+                Text(L10n.confirmClearMsg(store.entries.count))
+            }
 
             Spacer()
 
-            Text("\(store.filteredEntries.count) / \(store.entries.count)" + ( " " + String(localized: "history.entries")))
+            Text("\(store.filteredEntries.count) / \(store.entries.count)" + ( " " + L10n.historyEntriesLabel))
                 .font(.system(size: 10))
                 .foregroundColor(.secondary.opacity(0.6))
         }

@@ -30,12 +30,43 @@ struct HistoryEntry: Codable, Identifiable {
     /// 相对时间描述
     var relativeTime: String {
         let interval = Date().timeIntervalSince(timestamp)
+        let lang = LanguageManager.currentLanguage
+        let m = Int(interval / 60)
+        let h = Int(interval / 3600)
+        let d = Int(interval / 86400)
         switch interval {
-        case ..<60:   return "刚刚"
-        case ..<300:  return "\(Int(interval / 60)) 分钟前"
-        case ..<3600: return "\(Int(interval / 60)) 分钟前"
-        case ..<86400: return "\(Int(interval / 3600)) 小时前"
-        default:       return "\(Int(interval / 86400)) 天前"
+        case ..<60:
+            switch lang {
+            case "zh-Hans": return "刚刚"
+            case "ja":      return "たった今"
+            case "fr":      return "à l'instant"
+            case "de":      return "gerade eben"
+            default:        return "just now"
+            }
+        case ..<3600:
+            switch lang {
+            case "zh-Hans": return "\(m) 分钟前"
+            case "ja":      return "\(m) 分前"
+            case "fr":      return "il y a \(m) min"
+            case "de":      return "vor \(m) Min"
+            default:        return "\(m)m ago"
+            }
+        case ..<86400:
+            switch lang {
+            case "zh-Hans": return "\(h) 小时前"
+            case "ja":      return "\(h) 時間前"
+            case "fr":      return "il y a \(h) h"
+            case "de":      return "vor \(h) Std"
+            default:        return "\(h)h ago"
+            }
+        default:
+            switch lang {
+            case "zh-Hans": return "\(d) 天前"
+            case "ja":      return "\(d) 日前"
+            case "fr":      return "il y a \(d) j"
+            case "de":      return "vor \(d) Tagen"
+            default:        return "\(d)d ago"
+            }
         }
     }
 }

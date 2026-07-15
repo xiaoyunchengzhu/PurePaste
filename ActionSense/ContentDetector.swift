@@ -8,11 +8,8 @@ enum DetectedContent {
     case url(URL)
     case email(String)
     case phone(String)
-    case address(String)
     case datetime(Date, String)
-    case ipAddress(String)
-    case tracking(String, String)
-    case color(NSColor, String)
+        case color(NSColor, String)
     case imageURL(URL)
     case mathExpression(String, Double)
     case geoCoordinate(Double, Double)
@@ -25,10 +22,7 @@ enum DetectedContent {
         case .url:             return L10n.Detected.text(for: "url")
         case .email:           return L10n.Detected.text(for: "email")
         case .phone:           return L10n.Detected.text(for: "phone")
-        case .address:         return L10n.Detected.text(for: "address")
         case .datetime:        return L10n.Detected.text(for: "datetime")
-        case .ipAddress:       return L10n.Detected.text(for: "ip")
-        case .tracking:        return L10n.Detected.text(for: "tracking")
         case .color:           return L10n.Detected.text(for: "color")
         case .imageURL:        return L10n.Detected.text(for: "imageURL")
         case .mathExpression:  return L10n.Detected.text(for: "math")
@@ -44,10 +38,7 @@ enum DetectedContent {
         case .url:             return "link"
         case .email:           return "envelope"
         case .phone:           return "phone"
-        case .address:         return "mappin.and.ellipse"
         case .datetime:        return "calendar"
-        case .ipAddress:       return "network"
-        case .tracking:        return "shippingbox"
         case .color:           return "paintpalette"
         case .imageURL:        return "photo"
         case .mathExpression:  return "function"
@@ -66,14 +57,8 @@ enum DetectedContent {
             return addr
         case .phone(let num):
             return num
-        case .address(let addr):
-            return addr
         case .datetime(_, let original):
             return original
-        case .ipAddress(let ip):
-            return ip
-        case .tracking(let num, _):
-            return num
         case .color(_, let hex):
             return hex
         case .imageURL(let url):
@@ -85,6 +70,12 @@ enum DetectedContent {
         case .richHTML(let text, _):
             return String(text.prefix(80))
         case .jsonContent(let text):
+            if let data = text.data(using: .utf8),
+               let obj = try? JSONSerialization.jsonObject(with: data),
+               let formatted = try? JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted),
+               let result = String(data: formatted, encoding: .utf8) {
+                return String(result.prefix(200))
+            }
             return String(text.prefix(80))
         }
     }
@@ -104,10 +95,7 @@ enum PasteFlowAction: CaseIterable {
     case openBrowser
     case openMail
     case callPhone
-    case openMaps
     case addToCalendar
-    case pingIP
-    case trackPackage
     case copyColorHex
     case copyColorRGB
     case copyResult
@@ -123,10 +111,7 @@ enum PasteFlowAction: CaseIterable {
         case .openBrowser:        return L10n.Action.text(for: "openBrowser")
         case .openMail:           return L10n.Action.text(for: "openMail")
         case .callPhone:          return L10n.Action.text(for: "callPhone")
-        case .openMaps:           return L10n.Action.text(for: "openMaps")
         case .addToCalendar:      return L10n.Action.text(for: "addToCalendar")
-        case .pingIP:             return L10n.Action.text(for: "pingIP")
-        case .trackPackage:       return L10n.Action.text(for: "trackPackage")
         case .copyColorHex:       return L10n.Action.text(for: "copyColorHex")
         case .copyColorRGB:       return L10n.Action.text(for: "copyColorRGB")
         case .copyResult:         return L10n.Action.text(for: "copyResult")
@@ -144,10 +129,7 @@ enum PasteFlowAction: CaseIterable {
         case .openBrowser:        return "safari"
         case .openMail:           return "envelope"
         case .callPhone:          return "phone"
-        case .openMaps:           return "map"
         case .addToCalendar:      return "calendar.badge.plus"
-        case .pingIP:             return "terminal"
-        case .trackPackage:       return "shippingbox"
         case .copyColorHex:       return "number"
         case .copyColorRGB:       return "number.square"
         case .copyResult:         return "doc.on.doc"
@@ -176,10 +158,7 @@ enum PasteFlowAction: CaseIterable {
             return actions
         case .email:       return [.openMail]
         case .phone:       return [.callPhone]
-        case .address:     return [.openMaps]
         case .datetime:    return [.addToCalendar]
-        case .ipAddress:   return [.pingIP]
-        case .tracking:    return [.trackPackage]
         case .color:           return [.copyColorHex, .copyColorRGB]
         case .imageURL:        return [.openBrowser]
         case .mathExpression:  return [.copyResult]

@@ -2,24 +2,7 @@ import Foundation
 
 // MARK: - 文本类检测器（地址 / 快递 / 日期 / JSON / 经纬度 / 富文本）
 
-final class TrackingDetector: ContentDetecting {
-    let identifier = "tracking"; let priority = 7
 
-    func detect(_ text: String, htmlData: Data?) -> DetectedContent? {
-        let cleaned = text.trimmingCharacters(in: .whitespaces)
-        let carriers: [(String, String)] = [
-            ("SF","顺丰速运"),("YT","圆通速递"),("YTO","圆通速递"),("ZTO","中通快递"),
-            ("STO","申通快递"),("JD","京东物流"),("DB","德邦快递"),("EMS","中国邮政"),
-        ]
-        for (prefix, name) in carriers {
-            guard cleaned.hasPrefix(prefix) else { continue }
-            let nums = String(cleaned.dropFirst(prefix.count))
-            if prefix == "SF", nums.count == 12, nums.allSatisfy({ $0.isNumber }) { return .tracking(cleaned, name) }
-            if nums.count >= 10, nums.allSatisfy({ $0.isNumber }) { return .tracking(cleaned, name) }
-        }
-        return nil
-    }
-}
 
 final class DatetimeDetector: ContentDetecting {
     let identifier = "datetime"; let priority = 11
@@ -98,22 +81,7 @@ final class GeoDetector: ContentDetecting {
     }
 }
 
-final class AddressDetector: ContentDetecting {
-    let identifier = "address"; let priority = 12
-    private let provinces = ["北京","天津","上海","重庆","河北","山西","辽宁","吉林","黑龙江","江苏","浙江","安徽","福建","江西","山东","河南","湖北","湖南","广东","海南","四川","贵州","云南","陕西","甘肃","青海","台湾","内蒙古","广西","西藏","宁夏","新疆","香港","澳门"]
-    private let keys = ["市","区","县","镇","街道","路","街","巷","号","楼","栋","单元","室","大道"]
 
-    func detect(_ text: String, htmlData: Data?) -> DetectedContent? {
-        let t = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard t.count >= 6 else { return nil }
-        var s = 0
-        for p in provinces { if t.contains(p) { s += 2; break } }
-        var kc = 0; for k in keys { if t.contains(k) { kc += 1 } }
-        if kc >= 2 { s += 2 } else if kc >= 1 { s += 1 }
-        if t.count >= 15 { s += 1 }
-        return s >= 3 ? .address(t) : nil
-    }
-}
 
 final class RichHTMLDetector: ContentDetecting {
     let identifier = "richHTML"; let priority = 13

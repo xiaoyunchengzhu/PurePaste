@@ -14,23 +14,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // 注册所有 PasteFlow 内容检测器（优先级链）
         let registry = DetectorRegistry.shared
         registry.register(ColorDetector())        // 0
-        registry.register(IPDetector())           // 1
-        registry.register(EmailDetector())        // 2
+                registry.register(EmailDetector())        // 2
         registry.register(URLDetector())          // 3
         registry.register(ImageURLDetector())     // 4
         registry.register(PhoneDetector())        // 5
         registry.register(JSONDetector())         // 6
-        registry.register(TrackingDetector())     // 7
-        registry.register(MathDetector())         // 9
+                registry.register(MathDetector())         // 9
         registry.register(GeoDetector())          // 10
         registry.register(DatetimeDetector())     // 11
-        registry.register(AddressDetector())      // 12
-        registry.register(RichHTMLDetector())     // 13
+                registry.register(RichHTMLDetector())     // 13
         registry.lock()
 
         print("  ✅ ActionSense 已启动")
         print("  📋 查看屏幕右上角菜单栏的剪贴板图标")
-        print("  \(String(localized: "startup.message"))")
+        print("  \(L10n.startupMessage)")
         print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     }
 }
