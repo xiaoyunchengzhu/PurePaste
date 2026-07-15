@@ -2,7 +2,7 @@
   <img src="https://img.shields.io/badge/macOS-14.0%2B-blue" alt="macOS">
   <img src="https://img.shields.io/badge/Swift-5.0-orange" alt="Swift">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
-  <a href="https://www.xiaoniubuniu.com/products/actionsense/"><img src="https://img.shields.io/badge/Download-xiaoniubuniu.com-ff69b4" alt="Download"></a>
+  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><img src="https://img.shields.io/badge/Download-xiaoniubuniu.com-ff69b4" alt="Download"></a>
 </p>
 
 <p align="center"><b>English</b> | <a href="README_zh.md">中文</a></p>
@@ -12,7 +12,11 @@
 <p align="center"><b>macOS Smart Clipboard Assistant</b> — understands what you copy, not just what it says.</p>
 
 <p align="center">
-  <a href="https://www.xiaoniubuniu.com/products/actionsense/">Product Page & Download</a>
+  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><b>🔗 产品落地页 / Product Page & Download 🔗</b></a>
+</p>
+
+<p align="center">
+  <a href="https://www.xiaoniubuniu.com/products/action-sense/"><img src="https://img.shields.io/badge/🌐_Landing_Page-xiaoniubuniu.com/products/actionsense-4CAF50?style=for-the-badge&logo=safari&logoColor=white&labelColor=555" alt="Landing Page"></a>
 </p>
 
 ---
@@ -89,7 +93,7 @@ open ActionSense.xcodeproj
 ```
 
 **Option 2: Download DMG**
-Download the latest build from [xiaoniubuniu.com/products/actionsense](https://www.xiaoniubuniu.com/products/actionsense/), drag to `/Applications`. Right-click → Open on first launch to bypass Gatekeeper.
+Download the latest build from [xiaoniubuniu.com/products/actionsense](https://www.xiaoniubuniu.com/products/action-sense/), drag to `/Applications`. Right-click → Open on first launch to bypass Gatekeeper.
 
 ## Architecture
 
