@@ -44,3 +44,4 @@ iOSInjectionProject/
 # Personal config files (license keys, dev team settings, etc.)
 DeveloperSettings.xcconfig
 /.claude
+/scripts

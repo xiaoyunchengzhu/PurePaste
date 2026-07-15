@@ -19,20 +19,26 @@ jobs:
             -scheme ActionSense \
             -configuration Release \
             -derivedDataPath ./build \
-            CODE_SIGN_IDENTITY="-" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGN_IDENTITY="-"
 
       - name: Package DMG
         run: |
-          APP_PATH=$(find ./build -name "PurePaste.app" -type d | head -1)
-          hdiutil create -volname PurePaste \
-            -srcfolder "$APP_PATH" \
+          APP_PATH=$(find ./build -name "ActionSense.app" -type d | head -1)
+          echo "Found app at: $APP_PATH"
+          # 创建临时目录，放入 app 和 /Applications 快捷方式
+          DMG_DIR="./dmg_staging"
+          mkdir -p "$DMG_DIR"
+          cp -R "$APP_PATH" "$DMG_DIR/"
+          ln -s /Applications "$DMG_DIR/Applications"
+          hdiutil create -volname ActionSense \
+            -srcfolder "$DMG_DIR" \
             -format UDZO \
-            PurePaste.dmg
+            -fs HFS+ \
+            ActionSense.dmg
+          rm -rf "$DMG_DIR"
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: PurePaste.dmg
+          files: ActionSense.dmg
           generate_release_notes: true

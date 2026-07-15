@@ -93,7 +93,7 @@ open ActionSense.xcodeproj
 ```
 
 **Option 2: Download DMG**
-Download the latest build from [xiaoniubuniu.com/products/actionsense](https://www.xiaoniubuniu.com/products/action-sense/), drag to `/Applications`. Right-click → Open on first launch to bypass Gatekeeper.
+Download the latest build from [xiaoniubuniu.com/products/action-sense](https://www.xiaoniubuniu.com/products/action-sense/). Open the DMG, drag `ActionSense.app` to the `Applications` folder. **First launch: Right-click the app → Open** to bypass Gatekeeper (System Settings → Privacy & Security → Open Anyway also works).
 
 ## Architecture
 
